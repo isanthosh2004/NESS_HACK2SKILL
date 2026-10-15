@@ -1,0 +1,21 @@
+# secrets — never commit
+.env
+*.pem
+*-key.json
+service-account*.json
+
+# python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+
+# local run outputs
+runs/
+
+# empty nested git repo (not part of this project)
+NESS_HACK2SKILL/
+# stray placeholder; real workflow is demo/loanlab_ci.yml
+demo/loanlab/.github/

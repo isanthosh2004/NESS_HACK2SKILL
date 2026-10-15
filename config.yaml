@@ -1,0 +1,37 @@
+# AgentControl shared configuration — committed to git, contains NO secrets.
+# Secrets (Gemini API key, GitHub token) live in Secret Manager / your local .env.
+# Any value can be overridden with an environment variable (name in brackets).
+
+project:
+  gcp_project_id: "REPLACE_WITH_YOUR_PROJECT_ID"      # [GOOGLE_CLOUD_PROJECT]
+  region: "asia-south1"                                # [AGENTCONTROL_REGION]  Cloud Run + Firestore
+  artifacts_bucket: "REPLACE_WITH_YOUR_PROJECT_ID-agentcontrol-runs"  # [AGENTCONTROL_BUCKET]
+  firestore_database: "(default)"                      # only (default) gets the Firestore free quota
+
+llm:
+  # "ai_studio" = Gemini API key from Google AI Studio (free tier, what we use).
+  # "vertex"    = Vertex AI via service-account auth (needs billing; switch later if wanted).
+  provider: "ai_studio"                                # [AGENTCONTROL_LLM_PROVIDER]
+  temperature: 0.1
+
+models:
+  # Pin exact model IDs here — never inline in prompts or code.
+  # Confirm they exist for your key with:  python -m infra.check_setup
+  fixer: "gemini-2.5-flash"                            # [AGENTCONTROL_FIXER_MODEL]
+  auditor: "gemini-2.5-pro"                            # [AGENTCONTROL_AUDITOR_MODEL] different model than the Fixer on purpose
+
+fixer:
+  max_iterations: 4          # LoopAgent cap (spec: 3-5)
+  max_llm_calls: 40          # hard ceiling per run, protects the free-tier quota
+  test_timeout_seconds: 60   # per pytest invocation
+  max_patch_chars: 4000      # largest single apply_patch replacement
+
+github:
+  demo_repo: "REPLACE_WITH_OWNER/loanlab"              # [AGENTCONTROL_DEMO_REPO]
+  token_secret: "github-token"                         # Secret Manager secret name
+gemini:
+  api_key_secret: "gemini-api-key"                     # Secret Manager secret name
+
+demo:
+  repo_path: "demo/loanlab"
+  hidden_tests_path: "demo/loanlab_hidden_tests"
